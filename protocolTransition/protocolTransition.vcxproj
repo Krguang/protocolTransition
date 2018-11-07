@@ -79,6 +79,7 @@
   </ImportGroup>
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="..\Src\dataProcessing.c" />
     <ClCompile Include="..\Src\gpio.c" />
     <ClCompile Include="..\Src\dma.c" />
     <ClCompile Include="..\Src\modbusMaster.c" />
@@ -101,6 +102,7 @@
     <ClCompile Include="..\Drivers\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal_gpio.c" />
     <None Include="stm32.mak" />
     <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c" />
+    <ClInclude Include="..\Inc\dataProcessing.h" />
     <ClInclude Include="..\Inc\gpio.h" />
     <ClInclude Include="..\Inc\dma.h" />
     <ClInclude Include="..\Inc\modbusMaster.h" />

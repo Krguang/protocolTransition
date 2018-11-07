@@ -48,7 +48,7 @@
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+extern volatile uint8_t sendCountFlag;
 /* USER CODE END Includes */
 
 extern TIM_HandleTypeDef htim3;

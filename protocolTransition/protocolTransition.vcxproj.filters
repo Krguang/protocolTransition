@@ -258,9 +258,15 @@
     <ClCompile Include="..\Src\modbusMaster.c">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\dataProcessing.c">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Inc\modbusMaster.h">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Inc\dataProcessing.h">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

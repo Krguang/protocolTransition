@@ -42,6 +42,8 @@
 
 /* USER CODE BEGIN 0 */
 
+volatile uint8_t sendCountFlag;
+
 /* USER CODE END 0 */
 
 TIM_HandleTypeDef htim3;
@@ -123,6 +125,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 	if (htim == &htim3)	//100ms
 	{
 		HAL_GPIO_TogglePin(led_run_GPIO_Port, led_run_Pin);
+		sendCountFlag++;
+		if (sendCountFlag > 8)
+		{
+			sendCountFlag = 0;
+		}
 	}
 }
 /* USER CODE END 1 */

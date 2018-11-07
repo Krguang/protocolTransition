@@ -117,6 +117,9 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 
+	  HAL_UART_Transmit(&huart1, "hello\n", 8, 0xff);
+	  HAL_Delay(500);
+
   }
   /* USER CODE END 3 */
 
