@@ -1363,7 +1363,6 @@
 #endif
 
 // --- Include directories begin --- //
-//$(LOCALAPPDATA)/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.mbed/cmsis/TARGET_CORTEX_M
 //.
 //$(TOOLCHAIN_ROOT)\arm-eabi\include\c++\7.2.0
 //$(TOOLCHAIN_ROOT)\arm-eabi\include\c++\7.2.0\arm-eabi\thumb\cortex_m3
@@ -1377,6 +1376,7 @@
 //..\Drivers\STM32F1xx_HAL_Driver\Inc
 //..\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy
 //..\Drivers\STM32F1xx_HAL_Driver\Src
+//../Drivers/CMSIS/Include
 // --- Include directories end --- //
 
 

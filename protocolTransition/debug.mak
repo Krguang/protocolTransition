@@ -6,7 +6,7 @@ BINARYDIR := Debug
 
 #Additional flags
 PREPROCESSOR_MACROS := DEBUG=1 flash_layout STM32F103xB
-INCLUDE_DIRS := C:/Users/K/AppData/Local/VisualGDB/EmbeddedBSPs/arm-eabi/com.sysprogs.arm.mbed/cmsis/TARGET_CORTEX_M ..\Inc ..\Drivers\CMSIS\Device\ST\STM32F1xx\Include ..\Drivers\STM32F1xx_HAL_Driver\Inc ..\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy ..\Drivers\STM32F1xx_HAL_Driver\Src
+INCLUDE_DIRS := ..\Inc ..\Drivers\CMSIS\Device\ST\STM32F1xx\Include ..\Drivers\STM32F1xx_HAL_Driver\Inc ..\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy ..\Drivers\STM32F1xx_HAL_Driver\Src ../Drivers/CMSIS/Include
 LIBRARY_DIRS := 
 LIBRARY_NAMES := 
 ADDITIONAL_LINKER_INPUTS := 

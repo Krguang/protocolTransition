@@ -29,7 +29,6 @@ static uint16_t GetCRC16(uint8_t *arr_buff, uint16_t len) {  //CRC校验程序
 	return (crc);
 }
 
-
 static void ModbusDecode(unsigned char *MDbuf, unsigned char len) {
 
 	uint16_t  crc;
@@ -49,6 +48,15 @@ static void ModbusDecode(unsigned char *MDbuf, unsigned char len) {
 	switch (MDbuf[0])
 	{
 	case 1:
+
+		if (MDbuf[1] == 3)
+		{
+			for (uint8_t i = 0; i < MDbuf[2] / 2; i++)
+			{
+				modbus03Temp01[i] = (uint16_t)(MDbuf[3 + 2 * i] << 8) + MDbuf[4 + 2 * i];
+			}
+		}
+
 		if (MDbuf[1] == 4)
 		{
 			for (uint8_t i = 0; i < MDbuf[2] / 2; i++)
@@ -80,6 +88,13 @@ static void ModbusDecode(unsigned char *MDbuf, unsigned char len) {
 	}
 }
 
+/**
+* @brief  发送03功能码
+* @param  slaveAdd: 要发送给的从机
+* @param  start: 发送数据的开始位置
+* @param  num: 发送数据的数量
+* @retval void
+*/
 void sendDataMaster03(uint8_t slaveAdd, uint16_t start, uint16_t num) {
 	uint8_t txBuf[10];
 	uint16_t temp;
@@ -96,6 +111,13 @@ void sendDataMaster03(uint8_t slaveAdd, uint16_t start, uint16_t num) {
 	HAL_UART_Transmit(&huart1, txBuf, 8, 0xffff);
 }
 
+/**
+* @brief  发送04功能码
+* @param  slaveAdd: 要发送给的从机
+* @param  start: 发送数据的开始位置
+* @param  num: 发送数据的数量
+* @retval void
+*/
 void sendDataMaster04(uint8_t slaveAdd, uint16_t start, uint16_t num) {
 	uint8_t txBuf[10];
 	uint16_t temp;
