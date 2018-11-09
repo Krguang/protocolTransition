@@ -36,7 +36,7 @@ error:
 	$(error Invalid configuration, please check your inputs)
 endif
 
-SOURCEFILES := ../Src/dataProcessing.c ../Src/gpio.c ../Src/dma.c ../Src/modbusMaster.c ../Src/usart.c ../Src/stm32f1xx_it.c ../Src/stm32f1xx_hal_msp.c ../Src/main.c ../Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c $(BSP_ROOT)/STM32F1xxxx/StartupFiles/startup_stm32f103xb.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c ../Src/tim.c
+SOURCEFILES := ../Src/gpio.c ../Src/dma.c ../Src/modbusMaster.c ../Src/usart.c ../Src/stm32f1xx_it.c ../Src/stm32f1xx_hal_msp.c ../Src/main.c ../Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c $(BSP_ROOT)/STM32F1xxxx/StartupFiles/startup_stm32f103xb.c ../Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c ../Src/tim.c
 EXTERNAL_LIBS := 
 EXTERNAL_LIBS_COPIED := $(foreach lib, $(EXTERNAL_LIBS),$(BINARYDIR)/$(notdir $(lib)))
 
@@ -180,10 +180,6 @@ $(BINARYDIR)/%.o : %.cxx $(all_make_files) |$(BINARYDIR)
 	$(CC) $(CFLAGS) $(CXXFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
 
 #VisualGDB: GeneratedRules				#<--- All lines below are auto-generated. Remove this line to suppress auto-generation of file rules.
-
-
-$(BINARYDIR)/dataProcessing.o : ../Src/dataProcessing.c $(all_make_files) |$(BINARYDIR)
-	$(CC) $(CFLAGS) -c $< -o $@ -MD -MF $(@:.o=.dep)
 
 
 $(BINARYDIR)/gpio.o : ../Src/gpio.c $(all_make_files) |$(BINARYDIR)

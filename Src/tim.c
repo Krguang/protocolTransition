@@ -39,6 +39,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "tim.h"
+#include "modbusMaster.h"
 
 /* USER CODE BEGIN 0 */
 
@@ -130,6 +131,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		{
 			sendCountFlag = 0;
 		}
+
+		dataProcessing();
 	}
 }
 /* USER CODE END 1 */

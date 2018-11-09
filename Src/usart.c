@@ -81,7 +81,7 @@ void MX_USART2_UART_Init(void)
 {
 
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 19200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -280,6 +280,39 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 
 /* USER CODE BEGIN 1 */
 
+
+void USART1_IRQHandler(void)
+{
+	uint32_t temp;
+	if ((__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET))
+	{
+		__HAL_UART_CLEAR_IDLEFLAG(&huart1);
+
+		HAL_UART_DMAStop(&huart1);
+		temp = hdma_usart1_rx.Instance->CNDTR;
+		Usart1ReceiveBuffer.BufferLen = BUFFER_SIZE - temp;
+		uart1_recv_end_flag = 1;
+		HAL_UART_Receive_DMA(&huart1, Usart1ReceiveBuffer.BufferArray, BUFFER_SIZE);
+	}
+}
+
+void USART2_IRQHandler(void)
+{
+	uint32_t temp;
+	if ((__HAL_UART_GET_FLAG(&huart2, UART_FLAG_IDLE) != RESET))
+	{
+		__HAL_UART_CLEAR_IDLEFLAG(&huart2);
+
+		HAL_UART_DMAStop(&huart2);
+		temp = hdma_usart2_rx.Instance->CNDTR;
+		Usart2ReceiveBuffer.BufferLen = BUFFER_SIZE - temp;
+		uart2_recv_end_flag = 1;
+		HAL_UART_Receive_DMA(&huart2, Usart2ReceiveBuffer.BufferArray, BUFFER_SIZE);
+	}
+}
+
+
+/*
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef*UartHandle)
 {
 	if (UartHandle->Instance == USART1)
@@ -314,6 +347,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef*UartHandle)
 		}
 	}
 }
+
+*/
 /* USER CODE END 1 */
 
 /**

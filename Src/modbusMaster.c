@@ -1,15 +1,20 @@
 #include "modbusMaster.h"
 #include "usart.h"
+#include "tim.h"
 
+uint16_t modbus04Temp01[64];	//从机1设备的04功能缓冲区
+uint16_t modbus03Temp01[64];	//从机1设备的03功能缓冲区
+uint16_t modbus03Temp02[64];	//从机2设备的03功能缓冲区
+uint16_t modbus03Temp03[64];	//从机3设备的03功能缓冲区
 
-uint16_t modbus04Temp01[128];	//从机1设备的04功能缓冲区
-uint16_t modbus03Temp01[128];	//从机1设备的03功能缓冲区
-uint16_t modbus03Temp02[128];	//从机2设备的03功能缓冲区
-uint16_t modbus03Temp03[128];	//从机3设备的03功能缓冲区
+uint16_t modbus16Temp01[64];
+uint16_t modbus16Temp02[64];
+uint16_t modbus16Temp03[64];
 
-
-uint16_t modbusTemp03[128];		//03功能码状态变量的缓冲区
-uint16_t modbusTemp04[128];		//04功能码状态变量的缓冲区
+uint16_t switchStatus[3];
+uint16_t setMode[3];
+uint16_t temperature[3];
+uint16_t humidity[3];
 
 
 static uint16_t GetCRC16(uint8_t *arr_buff, uint16_t len) {  //CRC校验程序
@@ -30,12 +35,12 @@ static uint16_t GetCRC16(uint8_t *arr_buff, uint16_t len) {  //CRC校验程序
 }
 
 static void ModbusDecode(unsigned char *MDbuf, unsigned char len) {
-
+	
 	uint16_t  crc;
 	uint8_t crch, crcl;
 	uint16_t temp;
 
-	if ((MDbuf[0]!=1)||(MDbuf[0] != 2)||(MDbuf[0] != 3))
+	if ((MDbuf[0]!=1)&&(MDbuf[0] != 2)&&(MDbuf[0] != 3))
 	{
 		return;
 	}
@@ -55,6 +60,7 @@ static void ModbusDecode(unsigned char *MDbuf, unsigned char len) {
 			{
 				modbus03Temp01[i] = (uint16_t)(MDbuf[3 + 2 * i] << 8) + MDbuf[4 + 2 * i];
 			}
+			HAL_GPIO_TogglePin(led_input_GPIO_Port, led_input_Pin);
 		}
 
 		if (MDbuf[1] == 4)
@@ -63,7 +69,9 @@ static void ModbusDecode(unsigned char *MDbuf, unsigned char len) {
 			{
 				modbus04Temp01[i] = (uint16_t)(MDbuf[3 + 2 * i] << 8) + MDbuf[4 + 2 * i];
 			}
+			HAL_GPIO_TogglePin(led_input_GPIO_Port, led_input_Pin);
 		}
+		
 		break;
 	case 2:
 		if (MDbuf[1] == 3)
@@ -73,6 +81,7 @@ static void ModbusDecode(unsigned char *MDbuf, unsigned char len) {
 				modbus03Temp02[i] = (uint16_t)(MDbuf[3 + 2 * i] << 8) + MDbuf[4 + 2 * i];
 			}
 		}
+		HAL_GPIO_TogglePin(led_output_GPIO_Port, led_output_Pin);
 		break;
 	case 3:
 		if (MDbuf[1] == 3)
@@ -82,6 +91,7 @@ static void ModbusDecode(unsigned char *MDbuf, unsigned char len) {
 				modbus03Temp03[i] = (uint16_t)(MDbuf[3 + 2 * i] << 8) + MDbuf[4 + 2 * i];
 			}
 		}
+		HAL_GPIO_TogglePin(led_output_GPIO_Port, led_output_Pin);
 		break;
 	default:
 		break;
@@ -107,8 +117,13 @@ void sendDataMaster03(uint8_t slaveAdd, uint16_t start, uint16_t num) {
 	temp = GetCRC16(txBuf, 6);
 	txBuf[6] = (uint8_t)(temp & 0xff);
 	txBuf[7] = (uint8_t)(temp >> 8);
-
-	HAL_UART_Transmit(&huart1, txBuf, 8, 0xffff);
+	if (slaveAdd == 1)
+	{
+		HAL_UART_Transmit(&huart2, txBuf, 8, 0xffff);
+	}
+	else {
+		HAL_UART_Transmit(&huart1, txBuf, 8, 0xffff);
+	}
 }
 
 /**
@@ -143,7 +158,7 @@ void sendDataMaster04(uint8_t slaveAdd, uint16_t start, uint16_t num) {
 * @param  num: 发送数据的数量
 * @retval void
 */
-void sendDataMaster16(UART_HandleTypeDef *huart,uint8_t slaveAdd,uint8_t scrArray[],uint16_t start,uint16_t num) {
+void sendDataMaster16(uint8_t slaveAdd,uint16_t scrArray[],uint16_t start,uint16_t num) {
 
 	uint8_t txBuf[128];
 	uint16_t temp;
@@ -165,7 +180,47 @@ void sendDataMaster16(UART_HandleTypeDef *huart,uint8_t slaveAdd,uint8_t scrArra
 	txBuf[7 + 2 * txBuf[5]] = (uint8_t)(temp & 0xff);
 	txBuf[8 + 2 * txBuf[5]] = (uint8_t)((temp >> 8) & 0xff);
 	txBufCount = 9 + 2 * txBuf[5];
-	HAL_UART_Transmit(&huart, txBuf, txBufCount, 0xffff);
+	if (slaveAdd == 1)
+	{
+		HAL_UART_Transmit(&huart2, txBuf, txBufCount, 0xffff);
+	}
+	else
+	{
+		HAL_UART_Transmit(&huart1, txBuf, txBufCount, 0xffff);
+	}
+}
+
+void dataProcessing() {
+
+	switch (sendCountFlag)
+	{
+	case 0:
+		sendDataMaster04(1, 9, 8);
+		break;
+	case 1:
+		sendDataMaster03(1, 0, 8);
+		break;
+	case 2:
+		sendDataMaster03(2, 0, 7);
+		break;
+	case 3:
+		sendDataMaster03(3, 0, 7);
+		break;
+	case 4:
+		sendDataMaster16(2, modbus16Temp02, 7, 3);
+		break;
+	case 5:
+		sendDataMaster16(3, modbus16Temp03, 7, 3);
+		break;
+	case 6:
+		break;
+	case 7:
+		break;
+	case 8:
+		break;
+	default:
+		break;
+	}
 }
 
 void modbusMasterScan() {
@@ -183,5 +238,6 @@ void modbusMasterScan() {
 		Usart2ReceiveBuffer.BufferLen = 0;
 		uart2_recv_end_flag = 0;
 	}
+
 }
 
